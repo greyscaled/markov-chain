@@ -1,0 +1,13 @@
+{
+  "git": {
+    "commitArgs": "--gpg-sign",
+    "commitMessage": "🚀 v${version}",
+    "tagAnnotation": "v${version}",
+    "tagArgs": "--sign"
+  },
+  "github": {
+    "release": true,
+    "releaseName": "Release v${version}",
+    "tokenRef": "RELEASE_IT_GITHUB_TOKEN"
+  }
+}
