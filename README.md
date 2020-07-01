@@ -4,7 +4,7 @@
 
 # @vapurrmaid/markov-chain
 
-A lightweight library for computations with markov chains and probability
+A lightweight TS library for computations with markov chains and probability
 matrices.
 
 ## Installation
