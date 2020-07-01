@@ -27,11 +27,13 @@
     "url": "https://github.com/vapurrmaid/markov-chain.git"
   },
   "scripts": {
-    "build": "yarn lint && prettier --check src && yarn clean && tsc -p tsconfig.prod.json",
+    "build": "tsc -p tsconfig.prod.json",
+    "build:clean": "yarn clean && yarn build",
     "clean": "rimraf dist",
     "format": "prettier --write src",
+    "format:check": "prettier --check src",
     "lint": "eslint --color --ext=ts src",
-    "release": "release-it",
+    "release": "yarn lint && yarn format:check && yarn build:clean && release-it",
     "test": "jest",
     "test:watch": "jest --watch"
   },
