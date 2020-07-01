@@ -2,8 +2,8 @@ import { Validate } from "@vapurrmaid/validate";
 import { ProbabilityMatrix } from "./ProbabilityMatrix";
 
 export class MarkovChain<T> {
-  private readonly values: T[];
   private readonly matrix: ProbabilityMatrix;
+  private readonly values: T[];
   private state = -1;
 
   constructor(values: T[], matrix: ProbabilityMatrix) {
