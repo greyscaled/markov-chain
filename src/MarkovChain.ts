@@ -6,13 +6,21 @@ export class MarkovChain<T> {
   private readonly values: T[];
   private state = -1;
 
-  constructor(values: T[], matrix: ProbabilityMatrix) {
+  constructor(values: T[], matrix: ProbabilityMatrix, initialState?: number) {
     Validate.n(values.length).isGreaterThan(0, "No values provided to MarkovChain");
     const lenM = matrix.value.length;
     Validate.n(values.length).is(
       lenM,
       `Number values should match provided matrix size of ${lenM}`
     );
+    if (initialState) {
+      Validate.n(initialState).inclusiveBetween(
+        0,
+        lenM - 1,
+        `initialState "${initialState}" is out of bounds. Must be between [0, ${lenM}).`
+      );
+      this.state = initialState;
+    }
     this.values = values;
     this.matrix = matrix;
   }

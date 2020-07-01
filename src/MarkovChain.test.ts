@@ -15,6 +15,21 @@ describe(MarkovChain.name, () => {
       expect(() => new MarkovChain(values, matrix)).not.toThrow();
     });
 
+    it("optionally accepts an initialState", () => {
+      // GIVEN a 3x3 matrix with initialState = 1
+      const initialState = 1;
+      const values = ["0", "1", "2"];
+      const m = [
+        [1, 0, 0],
+        [1, 0, 0],
+        [1, 0, 0],
+      ];
+      const matrix = new ProbabilityMatrix(m);
+      // THEN "1" is returned for initialState = 1
+      const mc = new MarkovChain(values, matrix, initialState);
+      expect(mc.current).toBe("1");
+    });
+
     it("throws an Error for zero-length input", () => {
       // GIVEN a zero-length input
       const values: number[] = [];
@@ -41,6 +56,18 @@ describe(MarkovChain.name, () => {
       // THEN an error is thrown
       const error = "Number values should match provided matrix size of 3";
       expect(() => new MarkovChain(values, matrix)).toThrowError(error);
+    });
+
+    it("throws an Error for an initialState out of bounds", () => {
+      // GIVEN a 1x1 matrix with an initialState = 1
+      const initialState = 1;
+      const values = ["0"];
+      const m = [[1]];
+      const matrix = new ProbabilityMatrix(m);
+
+      // THEN an error is thrown
+      const error = `initialState "${initialState}" is out of bounds. Must be between [0, 1).`;
+      expect(() => new MarkovChain(values, matrix, initialState)).toThrowError(error);
     });
   });
 
