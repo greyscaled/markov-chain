@@ -1,0 +1,34 @@
+name: Test
+on: [push]
+jobs:
+  build:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install
+        uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: install
+
+      - name: Format
+        uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: format:check
+
+      - name: Lint
+        uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: lint
+
+      - name: Test
+        uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: test
+
+      - name: Build
+        uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: build
