@@ -1,11 +1,13 @@
 {
   "name": "@vapurrmaid/markov-chain",
   "version": "0.1.2",
-  "description": "Library for computations with markov chains and probability matrices.",
+  "description": "TS library for computations with markov chains and probability matrices.",
   "keywords": [
     "markov",
     "markov-chain",
-    "probability"
+    "markov-decision-processes",
+    "probability",
+    "probability-matrix"
   ],
   "homepage": "https://github.com/vapurrmaid/markov-chain",
   "bugs": {

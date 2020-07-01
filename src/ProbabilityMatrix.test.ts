@@ -50,6 +50,35 @@ describe(ProbabilityMatrix.name, () => {
     });
   });
 
+  describe("getRowVector(aRow)", () => {
+    it("returns the appropriate vector", () => {
+      // GIVEN a 3x3 matrix
+      const m = [
+        [1, 0, 0],
+        [0, 1, 0],
+        [0, 0, 1],
+      ];
+
+      // WHEN a ProbabilityMatrix is constructed from m
+      const matrix = new ProbabilityMatrix(m);
+
+      // THEN [0, 1, 0] is returned for (1)
+      expect(matrix.getRowVector(1)).toStrictEqual([0, 1, 0]);
+    });
+
+    it("throws an Error when aRow is out of bounds", () => {
+      // GIVEN a 1x1 matrix
+      const m = [[1]];
+
+      // WHEN a ProbabilityMatrix is constructed with m
+      const matrix = new ProbabilityMatrix(m);
+
+      // THEN an error is thrown for 2
+      const error = `aRow "2" is out of bounds. Must be between [0, 1).`;
+      expect(() => matrix.getRowVector(2)).toThrowError(error);
+    });
+  });
+
   describe("selectFrom(aRow)", () => {
     it("returns an appropriate index", () => {
       // GIVEN a matrix with one outcome
@@ -69,6 +98,18 @@ describe(ProbabilityMatrix.name, () => {
         selectedRow = matrix.selectFrom(selectedRow);
         expect(selectedRow).toBe(expected);
       }
+    });
+
+    it("throws an Error when aRow is out of bounds", () => {
+      // GIVEN a 1x1 matrix
+      const m = [[1]];
+
+      // WHEN a ProbabilityMatrix is constructed from m
+      const matrix = new ProbabilityMatrix(m);
+
+      // THEN an error is thrown for 2
+      const error = `aRow "2" is out of bounds. Must be between [0, 1).`;
+      expect(() => matrix.selectFrom(2)).toThrowError(error);
     });
   });
 });
