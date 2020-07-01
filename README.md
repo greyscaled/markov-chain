@@ -40,6 +40,7 @@ import { MarkovChain } from '@vapurrmaid/markov-chain'
 
 - Must supply a N x N [`ProbabilityMatrix`](#probability-matrix)
 - Must supply an array of values of size N
+- Optionally supply an initialState in `[0, N)`
 
 Each row in the matrix corresponds to an index in the values array.
 
@@ -120,11 +121,17 @@ const m = [
 const matrix = new ProbabilityMatrix(m)
 ```
 
+#### `getRowVector(aRow)` Method
+
+Returns the probability vector for the specified row.
+
+- `aRow` is a number in `[0, N)`
+
 #### `selectFrom(aRow)` Method
 
 Using the probabilities defined in the given row, selects the next row.
 
-- `aRow` is a number from 0 to N - 1
+- `aRow` is a number in `[0, N)`
 
 Using the matrix defined above:
 
