@@ -22,6 +22,15 @@ export class ProbabilityMatrix {
     return Array.from(this.matrix);
   }
 
+  getRowVector(aRow: number): number[] {
+    Validate.n(aRow).inclusiveBetween(
+      0,
+      this.matrix.length - 1,
+      `aRow "${aRow}" is out of bounds. Must be between [0, ${this.matrix.length}).`
+    );
+    return Array.from(this.matrix[aRow]);
+  }
+
   selectFrom(aRow: number): number {
     Validate.n(aRow).inclusiveBetween(
       0,
