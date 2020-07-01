@@ -5,7 +5,9 @@
   "keywords": [
     "markov",
     "markov-chain",
-    "probability"
+    "markov-decision-processes",
+    "probability",
+    "probability-matrix"
   ],
   "homepage": "https://github.com/vapurrmaid/markov-chain",
   "bugs": {
