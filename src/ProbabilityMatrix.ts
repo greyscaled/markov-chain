@@ -44,14 +44,6 @@ export class ProbabilityMatrix {
     return result;
   }
 
-  private static randNum(): number {
-    // Guarantees [0, 1] inclusive
-    if (Math.random() === 0) {
-      return 1;
-    }
-    return Math.random();
-  }
-
   private static isProbabilistic(matrix: NumberMatrix): boolean {
     // Each row should sum to 1
     for (let i = 0; i < matrix.length; i++) {
@@ -72,5 +64,13 @@ export class ProbabilityMatrix {
     }
 
     return true;
+  }
+
+  private static randNum(): number {
+    // Guarantees [0, 1] inclusive
+    if (Math.random() === 0) {
+      return 1;
+    }
+    return Math.random();
   }
 }
