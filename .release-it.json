@@ -1,5 +1,6 @@
 {
   "git": {
+    "changelog": "git log --no-merges --pretty=format:\"* %s (%h)\" ${from}...${to}",
     "commitArgs": "--gpg-sign",
     "commitMessage": "🚀 v${version}",
     "tagAnnotation": "v${version}",
