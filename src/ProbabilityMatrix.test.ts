@@ -99,5 +99,17 @@ describe(ProbabilityMatrix.name, () => {
         expect(selectedRow).toBe(expected);
       }
     });
+
+    it("throws an Error when aRow is out of bounds", () => {
+      // GIVEN a 1x1 matrix
+      const m = [[1]];
+
+      // WHEN a ProbabilityMatrix is constructed from m
+      const matrix = new ProbabilityMatrix(m);
+
+      // THEN an error is thrown for 2
+      const error = `aRow "2" is out of bounds. Must be between [0, 1).`;
+      expect(() => matrix.selectFrom(2)).toThrowError(error);
+    });
   });
 });

@@ -35,7 +35,7 @@ export class ProbabilityMatrix {
     Validate.n(aRow).inclusiveBetween(
       0,
       this.matrix.length - 1,
-      `Row out of bounds. Must be between (0, ${this.matrix.length - 1}) but got ${aRow}`
+      `aRow "${aRow}" is out of bounds. Must be between [0, ${this.matrix.length}).`
     );
     const row = this.matrix[aRow];
     const randNum = ProbabilityMatrix.randNum();
