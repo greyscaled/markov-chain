@@ -40,13 +40,13 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "@vapurrmaid/validate": "^0.3.1"
+    "@vapurrmaid/validate": "^0.3.2"
   },
   "devDependencies": {
     "@types/jest": "^26.0.3",
-    "@typescript-eslint/eslint-plugin": "^3.4.0",
+    "@typescript-eslint/eslint-plugin": "^3.5.0",
     "@typescript-eslint/parser": "^3.4.0",
-    "@vapurrmaid/prettier-config": "^0.1.0",
+    "@vapurrmaid/prettier-config": "^0.1.1",
     "eslint": "^7.3.1",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-import": "^2.22.0",
@@ -58,7 +58,7 @@
     "release-it": "^13.6.4",
     "rimraf": "^3.0.2",
     "ts-jest": "^26.1.1",
-    "typescript": "^3.9.5"
+    "typescript": "^3.9.6"
   },
   "husky": {
     "hooks": {
