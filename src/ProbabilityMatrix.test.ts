@@ -31,6 +31,26 @@ describe(ProbabilityMatrix.name, () => {
       const error = "Probabilities array must be square";
       expect(() => new ProbabilityMatrix(m)).toThrowError(error);
     });
+
+    it("throws an Error for non-probabilistic input", () => {
+      // GIVEN an input that doesn't add to 1.0
+      const m1 = [[0.99]];
+
+      // GIVEN an input that has values below 0
+      const m2 = [
+        [-1, 2],
+        [1, 0],
+      ];
+
+      // GIVEN an input that has values above 1
+      const m3 = [[1.1]];
+
+      // THEN an error is thrown
+      const error = "Each probability vector must sum to 1 using values in [0, 1]";
+      expect(() => new ProbabilityMatrix(m1)).toThrowError(error);
+      expect(() => new ProbabilityMatrix(m2)).toThrowError(error);
+      expect(() => new ProbabilityMatrix(m3)).toThrowError(error);
+    });
   });
 
   describe("value property", () => {

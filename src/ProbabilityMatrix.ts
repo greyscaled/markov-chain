@@ -13,7 +13,7 @@ export class ProbabilityMatrix {
     );
     Validate.isTrue(
       ProbabilityMatrix.isProbabilistic(probabilities),
-      "Each entry in probabilities array must equat to 1.0"
+      "Each probability vector must sum to 1 using values in [0, 1]"
     );
     this.matrix = probabilities;
   }
@@ -54,9 +54,18 @@ export class ProbabilityMatrix {
   }
 
   private static isProbabilistic(matrix: NumberMatrix): boolean {
-    // Each row should sum to 1
-    for (let i = 0; i < matrix.length; i++) {
-      const sum = matrix[i].reduce((prev, current) => prev + current, 0);
+    for (const m of matrix) {
+      // each probability vector must sum to 1
+      let sum = 0;
+
+      // each probability entry must be in [0, 1]
+      for (const p of m) {
+        if (p < 0 || p > 1) {
+          return false;
+        }
+        sum += p;
+      }
+
       if (sum !== 1.0) {
         return false;
       }
