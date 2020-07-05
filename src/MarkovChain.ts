@@ -4,7 +4,7 @@ import { NumberMatrix, ProbabilityMatrix } from "./ProbabilityMatrix";
 export class MarkovChain<T> {
   private readonly matrix: ProbabilityMatrix;
   private readonly values: T[];
-  private state = -1;
+  private state = 0;
 
   constructor(values: T[], probabilities: NumberMatrix, initialState?: number) {
     this.matrix = new ProbabilityMatrix(probabilities);
@@ -27,17 +27,11 @@ export class MarkovChain<T> {
     }
   }
 
-  get current(): T | undefined {
-    if (this.notStarted()) {
-      return undefined;
-    }
+  get current(): T {
     return this.values[this.state];
   }
 
   get hasNext(): boolean {
-    if (this.notStarted()) {
-      return true;
-    }
     const current = this.matrix.value[this.state];
     return current[this.state] !== 1;
   }
@@ -47,13 +41,8 @@ export class MarkovChain<T> {
   }
 
   next(): T {
-    const selectRow = this.state < 0 ? 0 : this.state;
-    const idx = this.matrix.selectFrom(selectRow);
+    const idx = this.matrix.selectFrom(this.state);
     this.state = idx;
     return this.values[idx];
-  }
-
-  private notStarted(): boolean {
-    return this.state < 0;
   }
 }

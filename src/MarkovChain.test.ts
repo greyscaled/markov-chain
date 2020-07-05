@@ -84,17 +84,6 @@ describe(MarkovChain.name, () => {
         expect(mc.next()).toBe(expected);
       }
     });
-    it("returns undefined if no decisions have been made", () => {
-      // GIVEN n = 1
-      const values = [1];
-      const m = [[1]];
-
-      // WHEN a MarkovChain is constructed and no decisions are made
-      const mc = new MarkovChain(values, m);
-
-      // THEN undefined is returned from current
-      expect(mc.current).toBeUndefined();
-    });
   });
 
   describe("hasNext property", () => {
