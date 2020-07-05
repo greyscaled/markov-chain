@@ -1,5 +1,5 @@
 import { MarkovChain } from "./MarkovChain";
-import { ProbabilityMatrix } from "./ProbabilityMatrix";
+import { NumberMatrix } from "./ProbabilityMatrix";
 
 describe(MarkovChain.name, () => {
   describe("constructor", () => {
@@ -11,8 +11,7 @@ describe(MarkovChain.name, () => {
         [1, 0, 0],
         [1, 0, 0],
       ];
-      const matrix = new ProbabilityMatrix(m);
-      expect(() => new MarkovChain(values, matrix)).not.toThrow();
+      expect(() => new MarkovChain(values, m)).not.toThrow();
     });
 
     it("optionally accepts an initialState", () => {
@@ -24,9 +23,8 @@ describe(MarkovChain.name, () => {
         [1, 0, 0],
         [1, 0, 0],
       ];
-      const matrix = new ProbabilityMatrix(m);
       // THEN "1" is returned for initialState = 1
-      const mc = new MarkovChain(values, matrix, initialState);
+      const mc = new MarkovChain(values, m, initialState);
       expect(mc.current).toBe("1");
     });
 
@@ -34,11 +32,10 @@ describe(MarkovChain.name, () => {
       // GIVEN a zero-length input
       const values: number[] = [];
       const m = [[1]];
-      const matrix = new ProbabilityMatrix(m);
 
       // THEN an error is thrown
       const error = "No values provided to MarkovChain";
-      expect(() => new MarkovChain(values, matrix)).toThrowError(error);
+      expect(() => new MarkovChain(values, m)).toThrowError(error);
     });
 
     it("throws an Error for mismatch in values and matrix size", () => {
@@ -51,11 +48,10 @@ describe(MarkovChain.name, () => {
         [1, 0, 0],
         [1, 0, 0],
       ];
-      const matrix = new ProbabilityMatrix(m);
 
       // THEN an error is thrown
       const error = "Number values should match provided matrix size of 3";
-      expect(() => new MarkovChain(values, matrix)).toThrowError(error);
+      expect(() => new MarkovChain(values, m)).toThrowError(error);
     });
 
     it("throws an Error for an initialState out of bounds", () => {
@@ -63,11 +59,10 @@ describe(MarkovChain.name, () => {
       const initialState = 1;
       const values = ["0"];
       const m = [[1]];
-      const matrix = new ProbabilityMatrix(m);
 
       // THEN an error is thrown
       const error = `initialState "${initialState}" is out of bounds. Must be between [0, 1).`;
-      expect(() => new MarkovChain(values, matrix, initialState)).toThrowError(error);
+      expect(() => new MarkovChain(values, m, initialState)).toThrowError(error);
     });
   });
 
@@ -80,10 +75,9 @@ describe(MarkovChain.name, () => {
         [0, 0, 1],
         [0, 0, 1],
       ];
-      const matrix = new ProbabilityMatrix(m);
 
       // WHEN a MarkovChain is constructed and a decision is made
-      const mc = new MarkovChain(values, matrix);
+      const mc = new MarkovChain(values, m);
       const expected = "c";
 
       // THEN that decision is the only outcome
@@ -91,67 +85,114 @@ describe(MarkovChain.name, () => {
         expect(mc.next()).toBe(expected);
       }
     });
-    it("returns undefined if no decisions have been made", () => {
-      // GIVEN n = 1
-      const values = [1];
-      const matrix = new ProbabilityMatrix([[1]]);
+  });
 
-      // WHEN a MarkovChain is constructed and no decisions are made
-      const mc = new MarkovChain(values, matrix);
+  describe("hasTransitionFn property", () => {
+    it("returns false if one is not set", () => {
+      // GIVEN a MarkovChain
+      // THEN hasTransitionFn is false
+      const mc = new MarkovChain([1], [[1]]);
+      expect(mc.hasTransitionFn).toBeFalsy();
+    });
 
-      // THEN undefined is returned from current
-      expect(mc.current).toBeUndefined();
+    it("returns true if one is set", () => {
+      // GIVEN a MarkovChain
+      const mc = new MarkovChain([1], [[1]]);
+
+      // WHEN a transitionFn is set
+      mc.setTransitionFn(() => {
+        return [[1]];
+      });
+
+      // THEN hasTransitionFn is true
+      expect(mc.hasTransitionFn).toBeTruthy();
     });
   });
 
-  describe("hasNext property", () => {
-    it("returns true if no decisions have been made", () => {
-      // GIVEN a 1x1 matrix
-      const matrix = new ProbabilityMatrix([[1]]);
-
-      // WHEN a MarkovChain has no decisions
-      const mc = new MarkovChain([1], matrix);
-
-      // THEN hasNext is true
-      expect(mc.hasNext).toBe(true);
-    });
-
-    it("returns true if the current state is not terminal", () => {
+  describe("isTerminal property", () => {
+    it("returns false if the current state is not terminal", () => {
       // GIVEN a 2x2 matrix with infinite transitions
       const values = [1, 2];
       const m = [
         [0, 1],
         [1, 0],
       ];
-      const matrix = new ProbabilityMatrix(m);
 
       // WHEN a MarkovChain is constructed
-      const mc = new MarkovChain(values, matrix);
+      const mc = new MarkovChain(values, m);
 
       // THEN the MarkovChain always has a next decision
       for (let i = 0; i < 50; i++) {
         mc.next();
-        expect(mc.hasNext).toBe(true);
+        expect(mc.isTerminal).toBe(false);
       }
     });
 
-    it("returns false if the current state is terminal", () => {
+    it("returns true if the current state is terminal", () => {
       // Given a matrix with only 1 transition outcome
       const values = [1, 2];
       const m = [
         [1, 0],
         [1, 0],
       ];
-      const matrix = new ProbabilityMatrix(m);
 
       // When a MarkovChain is has made at least 1 decision
-      const mc = new MarkovChain(values, matrix);
+      const mc = new MarkovChain(values, m);
 
-      // THEN hasNext is always false
+      // THEN isTerminal is always false
       for (let i = 0; i < 50; i++) {
         mc.next();
-        expect(mc.hasNext).toBe(false);
+        expect(mc.isTerminal).toBe(true);
       }
+    });
+  });
+
+  describe("length property", () => {
+    it("Returns the proper length", () => {
+      // GIVEN a 3x3 matrix
+      const m = [
+        [0, 1, 0],
+        [0, 0, 1],
+        [1, 0, 0],
+      ];
+      const values = [1, 2, 3];
+      const mc = new MarkovChain(values, m);
+
+      // THEN the length is 3
+      expect(mc.length).toBe(3);
+    });
+  });
+
+  describe("probabilityMatrix property", () => {
+    it("Returns the corresponding NumberMatrix", () => {
+      // GIVEN a NumberMatrix
+      const m = [
+        [0, 1],
+        [1, 0],
+      ];
+      const values = [1, 2];
+      const mc = new MarkovChain(values, m);
+
+      // THEN probabilityMatrix is equal to that NumberMatrix
+      expect(mc.probabilityMatrix).toStrictEqual(m);
+    });
+
+    it("is immutable", () => {
+      // GIVEN a NumberMatrix
+      const m = [
+        [0, 1],
+        [1, 0],
+      ];
+      const values = [1, 2];
+      const mc = new MarkovChain(values, m);
+
+      // WHEN the return of probabilityMatrix is mutated
+      const pm = mc.probabilityMatrix;
+      pm[0] = [1, 0];
+      pm[1] = [0, 1];
+
+      // THEN the probabilityMatrix value is not effected
+      expect(mc.probabilityMatrix).toStrictEqual(m);
     });
   });
 
@@ -164,10 +205,9 @@ describe(MarkovChain.name, () => {
         [0, 0, 1],
         [1, 0, 0],
       ];
-      const matrix = new ProbabilityMatrix(m);
 
       // WHEN the first decision is made
-      const mc = new MarkovChain(values, matrix);
+      const mc = new MarkovChain(values, m);
       mc.next();
 
       // THEN the outcome is "b"
@@ -184,6 +224,39 @@ describe(MarkovChain.name, () => {
       expect(d2).toBe("a");
       expect(d3).toBe("b");
       expect(d4).toBe("c");
+    });
+
+    it("runs the transition function", () => {
+      // GIVEN a 2x2 matrix with one outcome
+      const values = ["first", "second"];
+      const matrix = [
+        [1, 0],
+        [1, 0],
+      ]; // always goes to value 1
+      const mc = new MarkovChain(values, matrix);
+
+      // WHEN a transitionFn is supplied
+      let firstRun = true;
+      function transitionFn(prev: number, next: number): NumberMatrix {
+        if (firstRun) {
+          expect(prev).toBe(0);
+          expect(next).toBe(0);
+          firstRun = false;
+        } else {
+          expect(prev).toBe(0);
+          expect(next).toBe(1);
+        }
+
+        return [
+          [0, 1],
+          [0, 1],
+        ];
+      }
+      mc.setTransitionFn(transitionFn);
+
+      // THEN it received the correct values and changes the probability matrix
+      expect(mc.next()).toBe("first");
+      expect(mc.next()).toBe("second");
     });
   });
 });

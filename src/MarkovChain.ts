@@ -1,18 +1,26 @@
 import { Validate } from "@vapurrmaid/validate";
-import { ProbabilityMatrix } from "./ProbabilityMatrix";
+import { NumberMatrix, ProbabilityMatrix } from "./ProbabilityMatrix";
+
+type StateTransitionFn = ((prevState: number, nextState: number) => NumberMatrix) | undefined;
 
 export class MarkovChain<T> {
-  private readonly matrix: ProbabilityMatrix;
   private readonly values: T[];
-  private state = -1;
 
-  constructor(values: T[], matrix: ProbabilityMatrix, initialState?: number) {
+  private matrix: ProbabilityMatrix;
+  private state = 0;
+  private transitionFn: StateTransitionFn;
+
+  constructor(values: T[], probabilities: NumberMatrix, initialState?: number) {
+    this.matrix = new ProbabilityMatrix(probabilities);
+
     Validate.n(values.length).isGreaterThan(0, "No values provided to MarkovChain");
-    const lenM = matrix.value.length;
+    const lenM = this.matrix.length;
     Validate.n(values.length).is(
       lenM,
       `Number values should match provided matrix size of ${lenM}`
     );
+    this.values = values;
+
     if (initialState) {
       Validate.n(initialState).inclusiveBetween(
         0,
@@ -21,33 +29,47 @@ export class MarkovChain<T> {
       );
       this.state = initialState;
     }
-    this.values = values;
-    this.matrix = matrix;
   }
 
-  get current(): T | undefined {
-    if (this.notStarted()) {
-      return undefined;
-    }
+  get current(): T {
     return this.values[this.state];
   }
 
-  get hasNext(): boolean {
-    if (this.notStarted()) {
-      return true;
-    }
+  get hasTransitionFn(): boolean {
+    return this.transitionFn !== undefined;
+  }
+
+  get isTerminal(): boolean {
     const current = this.matrix.value[this.state];
-    return current[this.state] !== 1;
+    return current[this.state] === 1;
+  }
+
+  get length(): number {
+    return this.matrix.length;
+  }
+
+  get probabilityMatrix(): NumberMatrix {
+    return Array.from(this.matrix.value);
   }
 
   next(): T {
-    const selectRow = this.state < 0 ? 0 : this.state;
-    const idx = this.matrix.selectFrom(selectRow);
-    this.state = idx;
-    return this.values[idx];
+    const prevState = this.state;
+    const nextState = this.matrix.selectFrom(this.state);
+    this.state = nextState;
+
+    if (this.transitionFn !== undefined) {
+      const newMatrix = this.transitionFn(prevState, nextState);
+      Validate.n(newMatrix.length).is(
+        this.matrix.length,
+        `transition function must create NumberMatrix of length ${this.matrix.length}`
+      );
+      this.matrix = new ProbabilityMatrix(newMatrix);
+    }
+
+    return this.values[nextState];
   }
 
-  private notStarted(): boolean {
-    return this.state < 0;
+  setTransitionFn(fn: StateTransitionFn): void {
+    this.transitionFn = fn;
   }
 }

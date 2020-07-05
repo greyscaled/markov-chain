@@ -14,6 +14,17 @@ describe(ProbabilityMatrix.name, () => {
       expect(() => new ProbabilityMatrix(m)).not.toThrow();
     });
 
+    it("The matrix is immutable", () => {
+      // GIVEN a 1x1 matrix
+      const m = [[1]];
+      const matrix = new ProbabilityMatrix(m);
+
+      // THEN the data is immutable
+      expect(matrix.getRowVector(0)).toStrictEqual([1]);
+      m[0][0] = 0;
+      expect(matrix.getRowVector(0)).toStrictEqual([1]);
+    });
+
     it("throws an Error for zero length input", () => {
       // GIVEN a zero-length input
       const m: number[][] = [];
@@ -53,6 +64,19 @@ describe(ProbabilityMatrix.name, () => {
     });
   });
 
+  describe("length property", () => {
+    // GIVEN a 3x3 NumberMatrix
+    const m = [
+      [0, 1, 0],
+      [0, 0, 1],
+      [1, 0, 0],
+    ];
+    const pm = new ProbabilityMatrix(m);
+
+    // THEN ProbabilityMatrix length is 3
+    expect(pm.length).toBe(3);
+  });
+
   describe("value property", () => {
     it("returns the input matrix", () => {
       // GIVEN a square matrix, m
@@ -67,6 +91,13 @@ describe(ProbabilityMatrix.name, () => {
 
       // THEN value property returns m
       expect(matrix.value).toStrictEqual(m);
+    });
+
+    it("is immutable", () => {
+      const m = [[1]];
+      const matrix = new ProbabilityMatrix(m);
+      matrix.value[0] = [];
+      expect(matrix.getRowVector(0)).toStrictEqual([1]);
     });
   });
 
@@ -84,6 +115,13 @@ describe(ProbabilityMatrix.name, () => {
 
       // THEN [0, 1, 0] is returned for (1)
       expect(matrix.getRowVector(1)).toStrictEqual([0, 1, 0]);
+    });
+
+    it("is immutable", () => {
+      const matrix = new ProbabilityMatrix([[1]]);
+      const r = matrix.getRowVector(0);
+      r[0] = 5;
+      expect(matrix.getRowVector(0)).toStrictEqual([1]);
     });
 
     it("throws an Error when aRow is out of bounds", () => {

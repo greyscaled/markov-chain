@@ -15,7 +15,17 @@ export class ProbabilityMatrix {
       ProbabilityMatrix.isProbabilistic(probabilities),
       "Each probability vector must sum to 1 using values in [0, 1]"
     );
-    this.matrix = probabilities;
+
+    // create a deep copy
+    const matrix = [];
+    for (const row of probabilities) {
+      matrix.push(Array.from(row));
+    }
+    this.matrix = matrix;
+  }
+
+  get length(): number {
+    return this.matrix.length;
   }
 
   get value(): NumberMatrix {

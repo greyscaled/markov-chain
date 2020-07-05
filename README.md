@@ -26,9 +26,12 @@ Represents a finite, discrete-time
 
 The capabilities of this module are:
 
-- probabilistic state transition [(see next)](#next-method)
-- reporting if the current state is terminal [(see hasNext)](#hasnext-property)
-  - a terminal state will always transition back to itself
+- Probabilistic state transition [(see next)](#next-method)
+  - A state [transition function](#settransitionfnprev-next-method) can be used
+    to dynamically update probabilities
+- Reporting if the current state is terminal
+  [(see isTerminal)](#isterminal-property)
+  - A terminal state will always transition back to itself
 
 #### MarkovChain Import
 
@@ -38,42 +41,63 @@ import { MarkovChain } from '@vapurrmaid/markov-chain'
 
 #### MarkovChain Constructor
 
-- Must supply a N x N [`ProbabilityMatrix`](#probability-matrix)
-- Must supply an array of values of size N
+- Must supply a N x N array of probabilities as `number[][]`
+- Must supply an array of values as `T[]` of size N
 - Optionally supply an initialState in `[0, N)`
+  - If none is supplied, the default `initialState = 0`
 
 Each row in the matrix corresponds to an index in the values array.
 
 ```ts
 const values = ["a", "b", "c"]
 const m = [
-  [0, 1, 0],
-  [0, 0, 1],
-  [1, 0, 0]
+  [0, 1, 0], // always selects row 1 = index 1 = "b"
+  [0, 0, 1], // always selects row 2 = index 2 = "c"
+  [1, 0, 0]  // always selects row 0 = index 0 = "a"
 ]
-const matrix = new ProbabilityMatrix(m)
-const mc = new MarkovChain(values, matrix)
+const mc = new MarkovChain(values, m)
 ```
 
 #### `current` Property
 
-- returns `undefined` if `next()` has never been called
-- otherwise returns the current value from the supplied values array
+- Returns the value associated to the current state (row) as `T`
 
-#### `hasNext` Property
+#### `hasTransitionFn` Property
 
-- returns `true` if `next()` has never been called
-- returns `true` if the current row is not terminal
-- returns `false` if the current row is terminal
+- Returns `true` if a transition function is defined, otherwise `false`
+- [see `setTransitionFn`](#settransitionfnprev-next-method)
+
+#### `isTerminal` Property
+
+- Returns `true` if the current row is terminal
+- Returns `false` if the current row is not terminal
+
+#### `length` Property
+
+- Returns the size of the matrix, N as `number`
+
+#### `probabilityMatrix` Property
+
+- Returns the [probability matrix](#probability-matrix) as: `number[][]`
 
 #### `next()` Method
 
-- computes and returns the next value using the probability matrix
+- Computes and returns the next value as `T` using the probability matrix
+- If a [transition function](#settransitionfnprev-next-method) is set, runs the
+  transition function
+
+#### `setTransitionFn(prev, next)` Method
+
+- Sets a transition function that is used to alter the
+  [probability matrix](#probabilitymatrix-property)
+  - Prev is the index (row) of the state before [`next`](#next-method) is called
+  - Next is the next index (row) computed after [`next`](#next-method) is called
 
 ### Probability Matrix
 
-Represents a decision or probability matrix. In typical mathematical
-representation, a probability matrix is formed as:
+Represents a probability matrix (aka transition matrix, Markov matrix or
+stochastic matrix). In typical mathematical representation, a probability matrix
+is formed as:
 
 <p>P = [p<sub>ij</sub>].</p>
 
@@ -81,9 +105,10 @@ Which represents the probability of transitioning to the `i`th column from the
 `j`th column. However, column vectors are less intuitive in programming, as they
 require methods that span multiple arrays.
 
-Instead, each row vector entry represents transitioning from the `i`th row to
-the `j`th row. Mathematically, that means this representation is a transpose:
-<span><code>ProbabilityMatrix</code> = P<sup>T</sup></span>
+Instead, in this implementation each row vector entry represents transitioning
+from the `i`th row to the `j`th row. Therefore this representation is a
+transpose of the mathematical definition: <span><code>ProbabilityMatrix</code> =
+P<sup>T</sup></span>
 
 > **Example**
 >
@@ -111,6 +136,7 @@ import { ProbabilityMatrix } from '@vapurrmaid/markov-chain'
 
 - Must be N x N
 - Each row must add to `1.0`
+  - Each value must be in the interval `[0, 1]`
 
 ```ts
 const m = [
@@ -121,19 +147,23 @@ const m = [
 const matrix = new ProbabilityMatrix(m)
 ```
 
+#### Properties
+
+- `value` - returns the supplied probabilities as `number[][]`
+- `length` - returns the size of the matrix, N as `number`
+
 #### `getRowVector(aRow)` Method
 
-Returns the probability vector for the specified row.
-
-- `aRow` is a number in `[0, N)`
+- Returns the probability vector for the specified row as `number[]`
+- `aRow` must be a number in the interval `[0, N)`
 
 #### `selectFrom(aRow)` Method
 
-Using the probabilities defined in the given row, selects the next row.
+- Using the probabilities defined in the given row, selects the next row as
+  `number`
+- `aRow` must be a number in the interval `[0, N)`
 
-- `aRow` is a number in `[0, N)`
-
-Using the matrix defined above:
+From the matrix defined above:
 
 ```ts
 let nextRow = matrix.selectFrom(0)   // 1
