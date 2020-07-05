@@ -79,6 +79,13 @@ describe(ProbabilityMatrix.name, () => {
       // THEN value property returns m
       expect(matrix.value).toStrictEqual(m);
     });
+
+    it("is immutable", () => {
+      const m = [[1]];
+      const matrix = new ProbabilityMatrix(m);
+      matrix.value[0] = [];
+      expect(matrix.getRowVector(0)).toStrictEqual([1]);
+    });
   });
 
   describe("getRowVector(aRow)", () => {
@@ -95,6 +102,13 @@ describe(ProbabilityMatrix.name, () => {
 
       // THEN [0, 1, 0] is returned for (1)
       expect(matrix.getRowVector(1)).toStrictEqual([0, 1, 0]);
+    });
+
+    it("is immutable", () => {
+      const matrix = new ProbabilityMatrix([[1]]);
+      const r = matrix.getRowVector(0);
+      r[0] = 5;
+      expect(matrix.getRowVector(0)).toStrictEqual([1]);
     });
 
     it("throws an Error when aRow is out of bounds", () => {
