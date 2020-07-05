@@ -40,6 +40,10 @@ export class MarkovChain<T> {
     return this.matrix.length;
   }
 
+  get probabilityMatrix(): NumberMatrix {
+    return Array.from(this.matrix.value);
+  }
+
   next(): T {
     const idx = this.matrix.selectFrom(this.state);
     this.state = idx;

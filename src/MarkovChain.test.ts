@@ -140,6 +140,39 @@ describe(MarkovChain.name, () => {
     });
   });
 
+  describe("probabilityMatrix property", () => {
+    it("Returns the corresponding NumberMatrix", () => {
+      // GIVEN a NumberMatrix
+      const m = [
+        [0, 1],
+        [1, 0],
+      ];
+      const values = [1, 2];
+      const mc = new MarkovChain(values, m);
+
+      // THEN probabilityMatrix is equal to that NumberMatrix
+      expect(mc.probabilityMatrix).toStrictEqual(m);
+    });
+
+    it("is immutable", () => {
+      // GIVEN a NumberMatrix
+      const m = [
+        [0, 1],
+        [1, 0],
+      ];
+      const values = [1, 2];
+      const mc = new MarkovChain(values, m);
+
+      // WHEN the return of probabilityMatrix is mutated
+      const pm = mc.probabilityMatrix;
+      pm[0] = [1, 0];
+      pm[1] = [0, 1];
+
+      // THEN the probabilityMatrix value is not effected
+      expect(mc.probabilityMatrix).toStrictEqual(m);
+    });
+  });
+
   describe("next(): T", () => {
     it("returns the next value", () => {
       // GIVEN a infinte decision matrix
