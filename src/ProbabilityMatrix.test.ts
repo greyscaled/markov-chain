@@ -14,6 +14,17 @@ describe(ProbabilityMatrix.name, () => {
       expect(() => new ProbabilityMatrix(m)).not.toThrow();
     });
 
+    it("The matrix is immutable", () => {
+      // GIVEN a 1x1 matrix
+      const m = [[1]];
+      const matrix = new ProbabilityMatrix(m);
+
+      // THEN the data is immutable
+      expect(matrix.getRowVector(0)).toStrictEqual([1]);
+      m[0][0] = 0;
+      expect(matrix.getRowVector(0)).toStrictEqual([1]);
+    });
+
     it("throws an Error for zero length input", () => {
       // GIVEN a zero-length input
       const m: number[][] = [];

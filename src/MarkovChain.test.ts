@@ -1,5 +1,4 @@
 import { MarkovChain } from "./MarkovChain";
-import { ProbabilityMatrix } from "./ProbabilityMatrix";
 
 describe(MarkovChain.name, () => {
   describe("constructor", () => {
@@ -11,8 +10,7 @@ describe(MarkovChain.name, () => {
         [1, 0, 0],
         [1, 0, 0],
       ];
-      const matrix = new ProbabilityMatrix(m);
-      expect(() => new MarkovChain(values, matrix)).not.toThrow();
+      expect(() => new MarkovChain(values, m)).not.toThrow();
     });
 
     it("optionally accepts an initialState", () => {
@@ -24,9 +22,8 @@ describe(MarkovChain.name, () => {
         [1, 0, 0],
         [1, 0, 0],
       ];
-      const matrix = new ProbabilityMatrix(m);
       // THEN "1" is returned for initialState = 1
-      const mc = new MarkovChain(values, matrix, initialState);
+      const mc = new MarkovChain(values, m, initialState);
       expect(mc.current).toBe("1");
     });
 
@@ -34,11 +31,10 @@ describe(MarkovChain.name, () => {
       // GIVEN a zero-length input
       const values: number[] = [];
       const m = [[1]];
-      const matrix = new ProbabilityMatrix(m);
 
       // THEN an error is thrown
       const error = "No values provided to MarkovChain";
-      expect(() => new MarkovChain(values, matrix)).toThrowError(error);
+      expect(() => new MarkovChain(values, m)).toThrowError(error);
     });
 
     it("throws an Error for mismatch in values and matrix size", () => {
@@ -51,11 +47,10 @@ describe(MarkovChain.name, () => {
         [1, 0, 0],
         [1, 0, 0],
       ];
-      const matrix = new ProbabilityMatrix(m);
 
       // THEN an error is thrown
       const error = "Number values should match provided matrix size of 3";
-      expect(() => new MarkovChain(values, matrix)).toThrowError(error);
+      expect(() => new MarkovChain(values, m)).toThrowError(error);
     });
 
     it("throws an Error for an initialState out of bounds", () => {
@@ -63,11 +58,10 @@ describe(MarkovChain.name, () => {
       const initialState = 1;
       const values = ["0"];
       const m = [[1]];
-      const matrix = new ProbabilityMatrix(m);
 
       // THEN an error is thrown
       const error = `initialState "${initialState}" is out of bounds. Must be between [0, 1).`;
-      expect(() => new MarkovChain(values, matrix, initialState)).toThrowError(error);
+      expect(() => new MarkovChain(values, m, initialState)).toThrowError(error);
     });
   });
 
@@ -80,10 +74,9 @@ describe(MarkovChain.name, () => {
         [0, 0, 1],
         [0, 0, 1],
       ];
-      const matrix = new ProbabilityMatrix(m);
 
       // WHEN a MarkovChain is constructed and a decision is made
-      const mc = new MarkovChain(values, matrix);
+      const mc = new MarkovChain(values, m);
       const expected = "c";
 
       // THEN that decision is the only outcome
@@ -94,10 +87,10 @@ describe(MarkovChain.name, () => {
     it("returns undefined if no decisions have been made", () => {
       // GIVEN n = 1
       const values = [1];
-      const matrix = new ProbabilityMatrix([[1]]);
+      const m = [[1]];
 
       // WHEN a MarkovChain is constructed and no decisions are made
-      const mc = new MarkovChain(values, matrix);
+      const mc = new MarkovChain(values, m);
 
       // THEN undefined is returned from current
       expect(mc.current).toBeUndefined();
@@ -107,10 +100,9 @@ describe(MarkovChain.name, () => {
   describe("hasNext property", () => {
     it("returns true if no decisions have been made", () => {
       // GIVEN a 1x1 matrix
-      const matrix = new ProbabilityMatrix([[1]]);
-
+      const m = [[1]];
       // WHEN a MarkovChain has no decisions
-      const mc = new MarkovChain([1], matrix);
+      const mc = new MarkovChain([1], m);
 
       // THEN hasNext is true
       expect(mc.hasNext).toBe(true);
@@ -123,10 +115,9 @@ describe(MarkovChain.name, () => {
         [0, 1],
         [1, 0],
       ];
-      const matrix = new ProbabilityMatrix(m);
 
       // WHEN a MarkovChain is constructed
-      const mc = new MarkovChain(values, matrix);
+      const mc = new MarkovChain(values, m);
 
       // THEN the MarkovChain always has a next decision
       for (let i = 0; i < 50; i++) {
@@ -142,10 +133,9 @@ describe(MarkovChain.name, () => {
         [1, 0],
         [1, 0],
       ];
-      const matrix = new ProbabilityMatrix(m);
 
       // When a MarkovChain is has made at least 1 decision
-      const mc = new MarkovChain(values, matrix);
+      const mc = new MarkovChain(values, m);
 
       // THEN hasNext is always false
       for (let i = 0; i < 50; i++) {
@@ -164,10 +154,9 @@ describe(MarkovChain.name, () => {
         [0, 0, 1],
         [1, 0, 0],
       ];
-      const matrix = new ProbabilityMatrix(m);
 
       // WHEN the first decision is made
-      const mc = new MarkovChain(values, matrix);
+      const mc = new MarkovChain(values, m);
       mc.next();
 
       // THEN the outcome is "b"
