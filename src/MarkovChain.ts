@@ -31,9 +31,9 @@ export class MarkovChain<T> {
     return this.values[this.state];
   }
 
-  get hasNext(): boolean {
+  get isTerminal(): boolean {
     const current = this.matrix.value[this.state];
-    return current[this.state] !== 1;
+    return current[this.state] === 1;
   }
 
   get length(): number {

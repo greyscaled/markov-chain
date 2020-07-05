@@ -86,18 +86,8 @@ describe(MarkovChain.name, () => {
     });
   });
 
-  describe("hasNext property", () => {
-    it("returns true if no decisions have been made", () => {
-      // GIVEN a 1x1 matrix
-      const m = [[1]];
-      // WHEN a MarkovChain has no decisions
-      const mc = new MarkovChain([1], m);
-
-      // THEN hasNext is true
-      expect(mc.hasNext).toBe(true);
-    });
-
-    it("returns true if the current state is not terminal", () => {
+  describe("isTerminal property", () => {
+    it("returns false if the current state is not terminal", () => {
       // GIVEN a 2x2 matrix with infinite transitions
       const values = [1, 2];
       const m = [
@@ -111,11 +101,11 @@ describe(MarkovChain.name, () => {
       // THEN the MarkovChain always has a next decision
       for (let i = 0; i < 50; i++) {
         mc.next();
-        expect(mc.hasNext).toBe(true);
+        expect(mc.isTerminal).toBe(false);
       }
     });
 
-    it("returns false if the current state is terminal", () => {
+    it("returns true if the current state is terminal", () => {
       // Given a matrix with only 1 transition outcome
       const values = [1, 2];
       const m = [
@@ -126,10 +116,10 @@ describe(MarkovChain.name, () => {
       // When a MarkovChain is has made at least 1 decision
       const mc = new MarkovChain(values, m);
 
-      // THEN hasNext is always false
+      // THEN isTerminal is always false
       for (let i = 0; i < 50; i++) {
         mc.next();
-        expect(mc.hasNext).toBe(false);
+        expect(mc.isTerminal).toBe(true);
       }
     });
   });
