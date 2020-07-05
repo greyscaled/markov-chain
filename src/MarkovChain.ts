@@ -1,10 +1,14 @@
 import { Validate } from "@vapurrmaid/validate";
 import { NumberMatrix, ProbabilityMatrix } from "./ProbabilityMatrix";
 
+type StateTransitionFn = ((prevState: number, nextState: number) => NumberMatrix) | undefined;
+
 export class MarkovChain<T> {
-  private readonly matrix: ProbabilityMatrix;
   private readonly values: T[];
+
+  private matrix: ProbabilityMatrix;
   private state = 0;
+  private transitionFn: StateTransitionFn;
 
   constructor(values: T[], probabilities: NumberMatrix, initialState?: number) {
     this.matrix = new ProbabilityMatrix(probabilities);
@@ -31,6 +35,10 @@ export class MarkovChain<T> {
     return this.values[this.state];
   }
 
+  get hasTransitionFn(): boolean {
+    return this.transitionFn !== undefined;
+  }
+
   get isTerminal(): boolean {
     const current = this.matrix.value[this.state];
     return current[this.state] === 1;
@@ -45,8 +53,23 @@ export class MarkovChain<T> {
   }
 
   next(): T {
-    const idx = this.matrix.selectFrom(this.state);
-    this.state = idx;
-    return this.values[idx];
+    const prevState = this.state;
+    const nextState = this.matrix.selectFrom(this.state);
+    this.state = nextState;
+
+    if (this.transitionFn !== undefined) {
+      const newMatrix = this.transitionFn(prevState, nextState);
+      Validate.n(newMatrix.length).is(
+        this.matrix.length,
+        `transition function must create NumberMatrix of length ${this.matrix.length}`
+      );
+      this.matrix = new ProbabilityMatrix(newMatrix);
+    }
+
+    return this.values[nextState];
+  }
+
+  setTransitionFn(fn: StateTransitionFn): void {
+    this.transitionFn = fn;
   }
 }

@@ -1,4 +1,5 @@
 import { MarkovChain } from "./MarkovChain";
+import { NumberMatrix } from "./ProbabilityMatrix";
 
 describe(MarkovChain.name, () => {
   describe("constructor", () => {
@@ -83,6 +84,28 @@ describe(MarkovChain.name, () => {
       for (let i = 0; i < 50; i++) {
         expect(mc.next()).toBe(expected);
       }
+    });
+  });
+
+  describe("hasTransitionFn property", () => {
+    it("returns false if one is not set", () => {
+      // GIVEN a MarkovChain
+      // THEN hasTransitionFn is false
+      const mc = new MarkovChain([1], [[1]]);
+      expect(mc.hasTransitionFn).toBeFalsy();
+    });
+
+    it("returns true if one is set", () => {
+      // GIVEN a MarkovChain
+      const mc = new MarkovChain([1], [[1]]);
+
+      // WHEN a transitionFn is set
+      mc.setTransitionFn(() => {
+        return [[1]];
+      });
+
+      // THEN hasTransitionFn is true
+      expect(mc.hasTransitionFn).toBeTruthy();
     });
   });
 
@@ -201,6 +224,39 @@ describe(MarkovChain.name, () => {
       expect(d2).toBe("a");
       expect(d3).toBe("b");
       expect(d4).toBe("c");
+    });
+
+    it("runs the transition function", () => {
+      // GIVEN a 2x2 matrix with one outcome
+      const values = ["first", "second"];
+      const matrix = [
+        [1, 0],
+        [1, 0],
+      ]; // always goes to value 1
+      const mc = new MarkovChain(values, matrix);
+
+      // WHEN a transitionFn is supplied
+      let firstRun = true;
+      function transitionFn(prev: number, next: number): NumberMatrix {
+        if (firstRun) {
+          expect(prev).toBe(0);
+          expect(next).toBe(0);
+          firstRun = false;
+        } else {
+          expect(prev).toBe(0);
+          expect(next).toBe(1);
+        }
+
+        return [
+          [0, 1],
+          [0, 1],
+        ];
+      }
+      mc.setTransitionFn(transitionFn);
+
+      // THEN it received the correct values and changes the probability matrix
+      expect(mc.next()).toBe("first");
+      expect(mc.next()).toBe("second");
     });
   });
 });
