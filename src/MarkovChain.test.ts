@@ -145,6 +145,22 @@ describe(MarkovChain.name, () => {
     });
   });
 
+  describe("length property", () => {
+    it("Returns the proper length", () => {
+      // GIVEN a 3x3 matrix
+      const m = [
+        [0, 1, 0],
+        [0, 0, 1],
+        [1, 0, 0],
+      ];
+      const values = [1, 2, 3];
+      const mc = new MarkovChain(values, m);
+
+      // THEN the length is 3
+      expect(mc.length).toBe(3);
+    });
+  });
+
   describe("next(): T", () => {
     it("returns the next value", () => {
       // GIVEN a infinte decision matrix

@@ -10,7 +10,7 @@ export class MarkovChain<T> {
     this.matrix = new ProbabilityMatrix(probabilities);
 
     Validate.n(values.length).isGreaterThan(0, "No values provided to MarkovChain");
-    const lenM = probabilities.length;
+    const lenM = this.matrix.length;
     Validate.n(values.length).is(
       lenM,
       `Number values should match provided matrix size of ${lenM}`
@@ -40,6 +40,10 @@ export class MarkovChain<T> {
     }
     const current = this.matrix.value[this.state];
     return current[this.state] !== 1;
+  }
+
+  get length(): number {
+    return this.matrix.length;
   }
 
   next(): T {

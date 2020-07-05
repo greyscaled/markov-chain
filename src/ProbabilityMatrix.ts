@@ -24,6 +24,10 @@ export class ProbabilityMatrix {
     this.matrix = matrix;
   }
 
+  get length(): number {
+    return this.matrix.length;
+  }
+
   get value(): NumberMatrix {
     return Array.from(this.matrix);
   }

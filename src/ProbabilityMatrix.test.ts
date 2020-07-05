@@ -64,6 +64,19 @@ describe(ProbabilityMatrix.name, () => {
     });
   });
 
+  describe("length property", () => {
+    // GIVEN a 3x3 NumberMatrix
+    const m = [
+      [0, 1, 0],
+      [0, 0, 1],
+      [1, 0, 0],
+    ];
+    const pm = new ProbabilityMatrix(m);
+
+    // THEN ProbabilityMatrix length is 3
+    expect(pm.length).toBe(3);
+  });
+
   describe("value property", () => {
     it("returns the input matrix", () => {
       // GIVEN a square matrix, m
