@@ -1,6 +1,6 @@
 {
   "name": "@vapurrmaid/markov-chain",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "TS library for computations with markov chains and probability matrices.",
   "keywords": [
     "markov",
