@@ -76,7 +76,7 @@ export class ProbabilityMatrix {
         sum += p;
       }
 
-      if (sum !== 1.0) {
+      if (Math.abs(sum - 1.0) > 0.0001) {
         return false;
       }
     }
