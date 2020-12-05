@@ -1,0 +1,9 @@
+*.lock
+*.sh
+
+coverage
+dist
+docs
+node_modules
+yarn.lock
+LICENSE

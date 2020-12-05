@@ -1,12 +1,25 @@
 {
   "compilerOptions": {
+    "allowJs": false,
+    "allowUnreachableCode": false,
+    "alwaysStrict": true,
     "declaration": true,
+    "diagnostics": true,
     "forceConsistentCasingInFileNames": true,
     "lib": [],
     "module": "CommonJS",
     "moduleResolution": "Node",
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "outDir": "dist",
+    "pretty": true,
+    "rootDir": "src",
+    "skipLibCheck": true,
+    "sourceMap": true,
     "strict": true,
-    "target": "ES5"
-  }
+    "target": "ES6"
+  },
+  "exclude": ["**/__mocks__/*.ts", "node_modules", "**/*.test.ts"]
 }

@@ -1,31 +1,35 @@
 {
   "root": true,
   "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "project": "./tsconfig.json"
-  },
   "plugins": ["@typescript-eslint"],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/recommended-requiring-type-checking",
     "plugin:import/errors",
     "plugin:import/typescript",
     "prettier/@typescript-eslint"
   ],
   "overrides": [
     {
-      "files": ["*.test.ts"],
-      "env": { "jest": true }
+      "env": {
+        "node": true
+      },
+      "files": ["jest.config.js"]
+    },
+    {
+      "env": {
+        "jest": true
+      },
+      "files": ["*.test.ts"]
     }
   ],
   "rules": {
-    "@typescript-eslint/explicit-function-return-type": "off",
-    "@typescript-eslint/no-unused-vars": "error",
-    "@typescript-eslint/no-use-before-define": "off",
+    "eqeqeq": "error",
     "import/named": "off",
     "import/no-default-export": ["error"],
-    "import/prefer-default-export": "off"
+    "import/prefer-default-export": "off",
+    "@typescript-eslint/no-unused-vars": "error",
+    "@typescript-eslint/semi": ["error"]
   }
 }

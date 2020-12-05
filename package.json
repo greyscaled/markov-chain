@@ -29,36 +29,41 @@
     "url": "https://github.com/vapurrmaid/markov-chain.git"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.prod.json",
-    "build:clean": "yarn clean && yarn build",
-    "clean": "rimraf dist",
-    "format": "prettier --write src",
-    "format:check": "prettier --check src",
-    "lint": "eslint --color --ext=ts src",
-    "release": "yarn lint && yarn format:check && yarn build:clean && release-it",
+    "build": "tsc -p .",
+    "build:clean": "yarn clean:build && yarn build",
+    "clean": "yarn clean:build && yarn clean:jest",
+    "clean:build": "rimraf dist",
+    "clean:jest": "jest --clearCache && rimraf coverage",
+    "format": "prettier --check **/**",
+    "format:write": "prettier --write **/**",
+    "lint": "eslint . --color --ext .ts --max-warnings 0",
+    "lint:fix": "eslint . --color --ext .ts --fix",
+    "pre-release": "yarn test && yarn lint && yarn format && yarn build:clean",
+    "release": "yarn pre-release && release-it",
     "test": "jest",
+    "test:coverage": "yarn clean:jest && jest --colors --coverage",
     "test:watch": "jest --watch"
   },
   "dependencies": {
     "@vapurrmaid/validate": "^0.3.4"
   },
   "devDependencies": {
-    "@types/jest": "^26.0.5",
-    "@typescript-eslint/eslint-plugin": "^4.1.1",
-    "@typescript-eslint/parser": "^4.1.1",
-    "@vapurrmaid/prettier-config": "^0.2.0",
-    "eslint": "^7.5.0",
-    "eslint-config-prettier": "^6.11.0",
-    "eslint-plugin-import": "^2.22.0",
-    "husky": "^4.2.5",
-    "jest": "^26.1.0",
-    "lint-staged": "^10.2.11",
-    "prettier": "^2.0.5",
+    "@types/jest": "^26.0.16",
+    "@typescript-eslint/eslint-plugin": "^4.9.0",
+    "@typescript-eslint/parser": "^4.9.0",
+    "@vapurrmaid/prettier-config": "^0.3.1",
+    "eslint": "^7.15.0",
+    "eslint-config-prettier": "^7.0.0",
+    "eslint-plugin-import": "^2.22.1",
+    "husky": "^4.3.4",
+    "jest": "^26.6.3",
+    "lint-staged": "^10.5.3",
+    "prettier": "^2.2.1",
     "prettier-plugin-organize-imports": "^1.1.1",
-    "release-it": "^13.6.5",
+    "release-it": "^14.2.2",
     "rimraf": "^3.0.2",
-    "ts-jest": "^26.1.3",
-    "typescript": "^3.9.7"
+    "ts-jest": "^26.4.4",
+    "typescript": "^4.1.2"
   },
   "husky": {
     "hooks": {
@@ -66,10 +71,9 @@
     }
   },
   "lint-staged": {
-    "*.{json,yaml,yml}": "prettier --write",
-    "*.md": "prettier --write --print-width=80 --prose-wrap=always",
+    "*.{js,json,md,yaml,yml}": "prettier --write",
     "*.ts": [
-      "eslint --color",
+      "eslint --color --fix",
       "prettier --write"
     ]
   }
