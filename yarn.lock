@@ -898,10 +898,10 @@
   resolved "https://registry.yarnpkg.com/@vapurrmaid/prettier-config/-/prettier-config-0.3.1.tgz#8f47c076c13f460920ff4c519458c4e1a4423f51"
   integrity sha512-3AGbmktNEvLtNXk718T6HZ3/BI7R6flHPMJ+Brl6GB0KsCMHf8R/fxLelKS5/zz9WxEgHGRi8jNGQIXZHozVYQ==
 
-"@vapurrmaid/validate@^0.3.4":
-  version "0.3.4"
-  resolved "https://registry.yarnpkg.com/@vapurrmaid/validate/-/validate-0.3.4.tgz#35274fe6e7e568df2685ebbed1d8811936bf8b8d"
-  integrity sha512-PWvPs4Su9HXLe20MEABNja85fHla+QRPDX8C7VL/AGleO1fxzBUX0J47POm+FpWYA5zviSntoOISRHt81WglMQ==
+"@vapurrmaid/validate@^1.0.0-beta.0":
+  version "1.0.0-beta.0"
+  resolved "https://registry.yarnpkg.com/@vapurrmaid/validate/-/validate-1.0.0-beta.0.tgz#fa874aa101242a72a275ce8af78ac6fbea5b14f5"
+  integrity sha512-2w9s1qL+0Az7PzidxER29NNxCXpasfRZHsVcQuiRxoVKcisddnkFEZG7bJR0YOEkhfLtQ1776GehP1HdYua2EQ==
 
 abab@^2.0.3:
   version "2.0.5"
