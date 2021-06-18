@@ -71,6 +71,47 @@ export class ProbabilityMatrix {
     return Array.from(this.matrix);
   }
 
+  private static isProbabilistic(matrix: NumberMatrix): boolean {
+    for (const m of matrix) {
+      // each probability vector must sum to 1
+      let sum = 0;
+
+      // each probability entry must be in [0, 1]
+      for (const p of m) {
+        if (p < 0 || p > 1) {
+          return false;
+        }
+        sum += p;
+      }
+
+      if (Math.abs(sum - 1.0) > 0.0001) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  private static isSquare(matrix: NumberMatrix): boolean {
+    for (let i = 0; i < matrix.length; i++) {
+      if (matrix[i].length !== matrix.length) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  private static randNum(): number {
+    // Guarantees [0, 1] inclusive
+    if (Math.random() === 0) {
+      /* istanbul ignore next */
+      return 1;
+    }
+    /* istanbul ignore next */
+    return Math.random();
+  }
+
   /**
    * Obtains a row vector
    * @param aRow The row vector to obtain
@@ -113,46 +154,5 @@ export class ProbabilityMatrix {
     }
 
     return result;
-  }
-
-  private static isProbabilistic(matrix: NumberMatrix): boolean {
-    for (const m of matrix) {
-      // each probability vector must sum to 1
-      let sum = 0;
-
-      // each probability entry must be in [0, 1]
-      for (const p of m) {
-        if (p < 0 || p > 1) {
-          return false;
-        }
-        sum += p;
-      }
-
-      if (Math.abs(sum - 1.0) > 0.0001) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  private static isSquare(matrix: NumberMatrix): boolean {
-    for (let i = 0; i < matrix.length; i++) {
-      if (matrix[i].length !== matrix.length) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  private static randNum(): number {
-    // Guarantees [0, 1] inclusive
-    if (Math.random() === 0) {
-      /* istanbul ignore next */
-      return 1;
-    }
-    /* istanbul ignore next */
-    return Math.random();
   }
 }

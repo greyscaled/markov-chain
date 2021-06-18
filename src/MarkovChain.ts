@@ -30,7 +30,7 @@ export class MarkovChain<T> {
    * @throws `RangeError` if `initialState` is not within the bounds
    * @see NumberMatrix
    */
-  constructor(values: T[], probabilities: NumberMatrix, initialState?: number) {
+  constructor(values: T[], probabilities: NumberMatrix, initialState = 0) {
     this.matrix = new ProbabilityMatrix(probabilities);
 
     Validate.n(values.length).isGreaterThan(0, "No values provided to MarkovChain");
@@ -63,7 +63,7 @@ export class MarkovChain<T> {
    * @see setTransitionFn
    */
   get hasTransitionFn(): boolean {
-    return this.transitionFn !== undefined;
+    return typeof this.transitionFn !== "undefined";
   }
 
   /**
@@ -100,7 +100,7 @@ export class MarkovChain<T> {
     const nextState = this.matrix.selectFrom(this.state);
     this.state = nextState;
 
-    if (this.transitionFn !== undefined) {
+    if (typeof this.transitionFn !== "undefined") {
       const newMatrix = this.transitionFn(prevState, nextState);
       Validate.n(newMatrix.length).is(
         this.matrix.length,
