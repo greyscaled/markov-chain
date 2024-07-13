@@ -19,12 +19,6 @@ The capabilities of this module are:
   [(see isTerminal)](#isterminal-property)
   - A terminal state will always transition back to itself
 
-#### MarkovChain Import
-
-```ts
-import { MarkovChain } from '@vapurrmaid/markov-chain'
-```
-
 #### MarkovChain Constructor
 
 - Must supply a N x N array of probabilities as `number[][]`
