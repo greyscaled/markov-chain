@@ -1,21 +1,7 @@
-![npm](https://img.shields.io/npm/dw/@vapurrmaid/markov-chain?color=%23ea80fc&style=flat-square)
-![npm (scoped with tag)](https://img.shields.io/npm/v/@vapurrmaid/markov-chain/latest?color=%23ea80fc&style=flat-square)
-![Test](https://github.com/vapurrmaid/markov-chain/workflows/Test/badge.svg?branch=master&event=push)
-
-# @vapurrmaid/markov-chain
+# markov-chain
 
 A lightweight TS library for computations with markov chains and probability
 matrices.
-
-## Installation
-
-```bash
-# yarn
-yarn add @vapurrmaid/markov-chain
-
-# npm
-npm install --save @vapurrmaid/markov-chain
-```
 
 ## Modules
 
